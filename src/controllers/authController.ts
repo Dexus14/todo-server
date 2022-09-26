@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import passport from "passport";
 import jwt from 'jsonwebtoken'
 import { validate } from "email-validator";
-import {createUser} from "../services/database.service";
+import {createUser, getUserByEmail, getUserByUsername} from "../services/database.service";
 
 export function auth_login_get(req: Request, res: Response) {
     const error = req.query.error ?? 0
@@ -17,46 +17,49 @@ export async function auth_login_post(req: Request, res: Response, next: any) {
             try {
                 if(err || !user)
                     return res.redirect('./login?error=1')
-                
+
                 req.login(
                     user,
                     { session: false },
                     async err => {
                         if(err)
-                            return res.sendStatus(500) // FIXME: Change this?
-                        
-                        const body = { id: user.id, email: user.email }
-                        const token = jwt.sign({ user: body }, 'TOP_SECRET') // FIXME: What is 'TOP_SECRET'?
+                            return res.redirect('./login?error=1')
 
-                        return res.cookie('jwt', token).redirect('../..')
+                        const body = { id: user.id, email: user.email }
+                        const passphrase = process.env.JWT_PASSPHRASE as string
+                        const token = jwt.sign({ user: body }, passphrase)
+
+                        return res.cookie('jwt', token, { maxAge: 86_400_000 }).redirect('../..')
                     }
                 )
             } catch(err) {
-                return res.send('err' + err) // TODO: ERR
+                return res.redirect('./login?error=1')
             }
         }
     )(req, res, next)
 }
 
 export function auth_register_get(req: Request, res: Response) {
-    res.render('register', { title: 'TODO | Login', error: null})
+    const error = req.query.error
+    res.render('register', { title: 'TODO | Register', error })
 }
 
 export async function auth_register_post(req: Request, res: Response) {
     const { username, email, password, repeatPassword } = req.body
 
-    if(password !== repeatPassword) 
-        res.redirect('./?error=passwordmatch')
-
-    if(username.length < 5 || username.length > 20)
-        res.redirect('./?error=usernamelength')
-
-    if(!validate(email))
-        res.redirect('./?error=incorrectemail')
+    if(
+        username.length < 5 ||
+        username.length > 20 ||
+        !validate(email) ||
+        password !== repeatPassword ||
+        await getUserByUsername(username) !== null ||
+        await getUserByEmail(email) !== null
+    )
+        return res.redirect('./register?error=1')
 
     await createUser({ username, email, password })
 
-    res.redirect('../..')
+    return res.redirect('../..')
 }
 
 export async function auth_logout_get(req: Request, res: Response) {
