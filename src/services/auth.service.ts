@@ -64,6 +64,17 @@ passport.use(
     )
 )
 
+
+const cookieExtractor = (req: any) => {
+    let jwt = null 
+
+    if (req && req.cookies) {
+        jwt = req.cookies['jwt']
+    }
+
+    return jwt
+}
+
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
 passport.use(
@@ -71,12 +82,10 @@ passport.use(
     new JWTStrategy(
         {
             secretOrKey: 'TOP_SECRET', // FIXME: Change secret? Add expiry date?
-            jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
+            jwtFromRequest: cookieExtractor
         },
         async (token, done) => {
-            try {
-                console.log(token);
-                
+            try {                
                 return done(null, token.user)
             } catch(err) {
                 console.log('asdoasndoiansdfio') // FIXME: Add error handling

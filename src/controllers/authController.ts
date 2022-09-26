@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import path from 'path'
 
 export function auth_login_get(req: Request, res: Response) {
-    res.sendFile(path.join(__dirname + '/../view/login/index.html'))
+    res.render('login', { title: 'TODO | Login'})
 }
 
 export async function auth_login_post(req: Request, res: Response, next: any) {
@@ -27,7 +27,7 @@ export async function auth_login_post(req: Request, res: Response, next: any) {
                         const body = { id: user.id, email: user.email }
                         const token = jwt.sign({ user: body }, 'TOP_SECRET') // FIXME: What is 'TOP_SECRET'?
 
-                        return res.json({ token })
+                        return res.cookie('jwt', token).redirect('../..')
                     }
                 )
             } catch(err) {
@@ -63,4 +63,8 @@ export async function auth_register_post(req: Request, res: Response) {
     //     res.send('Error!')
     // }
 
+}
+
+export async function auth_logout_get(req: Request, res: Response) {
+    res.clearCookie('jwt').redirect('login')
 }
