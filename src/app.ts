@@ -22,7 +22,4 @@ app.use(passport.initialize())
 app.use('/auth', authRoutes)
 app.use('/', passport.authenticate('jwt', { session: false, failureRedirect: '/auth/login' }), mainRoutes)
 
-// app.use((err: any, req: any, res: any) => {
-//     res.json({ error: err })
-// })
 app.use((req, res) => res.status(404).send('Invalid route!'))

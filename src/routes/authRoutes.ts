@@ -7,7 +7,7 @@ const router = express.Router()
 router.get('/login', auth_login_get)
 router.post('/login', auth_login_post)
 router.get('/register', auth_register_get)
-router.post('/register', passport.authenticate('register', { session: false }), auth_register_post)
+router.post('/register', auth_register_post)
 router.get('/logout', auth_logout_get)
 
 

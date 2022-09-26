@@ -56,7 +56,7 @@ export async function deleteTodoById(todoId: string) {
     })
 }
 
-export async function getUserCredentialsByUsername(username: string) {
+export async function getUserByUsername(username: string) {
     return await prisma.user.findFirst({
         where: {
             username
@@ -64,7 +64,7 @@ export async function getUserCredentialsByUsername(username: string) {
     })
 }
 
-export async function getUserCredentialsByEmail(email: string) {
+export async function getUserByEmail(email: string) {
     return await prisma.user.findFirst({
         where: {
             email

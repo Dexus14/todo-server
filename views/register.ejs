@@ -14,22 +14,28 @@
             <div class="form-wrapper">
                 <form method="POST">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Username or email address</label>
-                      <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" required>
-                      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                      <label for="exampleInputEmail1" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" required>
                     </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+                    </div>
+
                     <div class="mb-3">
                       <label for="exampleInputPassword1" class="form-label">Password</label>
                       <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
                     </div>
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Remember password</label>
+
+                    <div class="mb-3">
+                      <label for="exampleInputPassword2" class="form-label">Repeat your password</label>
+                      <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required>
                     </div>
+
                     <button type="submit" class="btn btn-primary">Submit</button>
 
                     <div class="text-center">
-                      <p>Not a member? <a href="/auth/register">Register</a></p>
+                      <p>Already a member? <a href="/auth/login">Login</a></p>
                     </div>
                 </form>
             </div>
