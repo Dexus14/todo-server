@@ -7,7 +7,7 @@ require('dotenv').config()
 
 const app = express()
 
-app.listen(3002) // TODO: Change port to .env
+app.listen(process.env.PORT)
 
 // FIXME: uninstall bodyparses
 app.use(express.urlencoded({ extended: true }))

@@ -57,7 +57,7 @@ passport.use(
     'jwt',
     new JWTStrategy(
         {
-            secretOrKey: 'TOP_SECRET', // FIXME: Change secret? Add expiry date?
+            secretOrKey: process.env.JWT_PASSPHRASE, // FIXME: Change secret? Add expiry date?
             jwtFromRequest: cookieExtractor
         },
         async (token, done) => {

@@ -3,9 +3,9 @@
 <section class="wrapper pt-5 bg-light">
     <div class="card col-xl-4 offset-xl-4 col-sm-10 offset-sm-1 col-md-6 offset-md-3">
         <div class="card-header">
-            <h2>Login</h2>
+            <h2>Register</h2>
         </div>
-        <% if (error == 1) { %>
+        <% if (error === '1') { %>
           <div class="alert alert-danger mx-5 mt-4 mb-0" role="alert">
             An error occured while logging in. Please make sure your credentials are correct.
           </div>
@@ -14,25 +14,25 @@
             <div class="form-wrapper">
                 <form method="POST">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Username</label>
-                      <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" required>
+                      <label for="username" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="username" name="username" minlength="5" maxlength="20" required>
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Email</label>
+                      <label for="email" class="form-label">Email</label>
                       <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
                     </div>
 
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="password" name="password" required>
                     </div>
 
                     <div class="mb-3">
-                      <label for="exampleInputPassword2" class="form-label">Repeat your password</label>
+                      <label for="repeatPassword" class="form-label">Repeat your password</label>
                       <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Register</button>
 
                     <div class="text-center">
                       <p>Already a member? <a href="/auth/login">Login</a></p>
