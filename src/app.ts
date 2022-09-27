@@ -3,6 +3,8 @@ import authRoutes from './routes/authRoutes'
 import mainRoutes from './routes/mainRoutes'
 import passport from './services/auth.service'
 import cookieParser from 'cookie-parser'
+import session from "express-session"
+import {flash} from "express-flash-message";
 require('dotenv').config()
 
 const app = express()
@@ -13,6 +15,18 @@ app.listen(process.env.PORT)
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(
+    session({
+        secret: 'test-secret', // FIXME: Change
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 1000 * 60 * 60
+        }
+    })
+)
+
+app.use(flash({ sessionKeyName: 'flashMessage' }))
 
 app.set('view engine', 'ejs')
 app.use(express.static(__dirname + '/public'))

@@ -1,5 +1,5 @@
 import passportLocal from 'passport-local'
-import { createUser, getUserByEmail, getUserByUsername } from './database.service'
+import { getUserByEmail, getUserByUsername } from './database.service'
 import { validate } from 'email-validator'
 import bcrypt from 'bcrypt'
 import passportJWT from 'passport-jwt'
@@ -15,11 +15,8 @@ passport.use(
             passwordField: 'password'
         },
         async (username, password, done) => {
-            // FIXME: Add expiry date and refresh token
-            // FIXME: User has only credentials
             let user = null
             try {
-                // Check if username passed by the user is an email.
                 // FIXME: User can possibly set username that is an email - add username validation.
                 if(validate(username))
                     user = await getUserByEmail(username)
@@ -57,7 +54,7 @@ passport.use(
     'jwt',
     new JWTStrategy(
         {
-            secretOrKey: process.env.JWT_PASSPHRASE, // FIXME: Change secret? Add expiry date?
+            secretOrKey: process.env.JWT_PASSPHRASE,
             jwtFromRequest: cookieExtractor
         },
         async (token, done) => {

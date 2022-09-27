@@ -38,7 +38,7 @@ export async function main_todos_delete_post(req: Request, res: Response) {
     try {
         await deleteTodoById(todoId)
     } catch(e) {
-        return res.redirect('/?error=delete')
+        return res.redirect('/?error=delete') // FIXME: Probably doesn't work
     }
 
     res.redirect('/')

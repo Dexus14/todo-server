@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken'
 import { validate } from "email-validator";
 import {createUser, getUserByEmail, getUserByUsername} from "../services/database.service";
 
-export function auth_login_get(req: Request, res: Response) {
-    const error = req.query.error ?? 0
+export async function auth_login_get(req: Request, res: Response) {
+    const messages = await req.consumeFlash('messages')
 
-    res.render('login', { title: 'TODO | Login', error})
+    res.render('login', { title: 'TODO | Login', messages })
 }
 
 export async function auth_login_post(req: Request, res: Response, next: any) {
@@ -15,15 +15,19 @@ export async function auth_login_post(req: Request, res: Response, next: any) {
         'login',
         async (err, user, info) => {
             try {
-                if(err || !user)
-                    return res.redirect('./login?error=1')
+                if(info.message)
+                    await req.flash('messages', info.message)
+
+                if(err || !user) {
+                    return res.redirect('./login')
+                }
 
                 req.login(
                     user,
                     { session: false },
                     async err => {
                         if(err)
-                            return res.redirect('./login?error=1')
+                            return res.redirect('./login')
 
                         const body = { id: user.id, email: user.email }
                         const passphrase = process.env.JWT_PASSPHRASE as string
@@ -33,29 +37,53 @@ export async function auth_login_post(req: Request, res: Response, next: any) {
                     }
                 )
             } catch(err) {
-                return res.redirect('./login?error=1')
+                return res.redirect('./login')
             }
         }
     )(req, res, next)
 }
 
-export function auth_register_get(req: Request, res: Response) {
-    const error = req.query.error
-    res.render('register', { title: 'TODO | Register', error })
+export async function auth_register_get(req: Request, res: Response) {
+    const messages = await req.consumeFlash('messages')
+
+    const username = await req.consumeFlash('username')
+    const email = await req.consumeFlash('email')
+
+    console.log(messages)
+    res.render('register', { title: 'TODO | Register', messages, username, email })
 }
 
 export async function auth_register_post(req: Request, res: Response) {
     const { username, email, password, repeatPassword } = req.body
 
-    if(
-        username.length < 5 ||
-        username.length > 20 ||
-        !validate(email) ||
-        password !== repeatPassword ||
-        await getUserByUsername(username) !== null ||
-        await getUserByEmail(email) !== null
-    )
-        return res.redirect('./register?error=1')
+    const messages = []
+
+    if(username.length < 5)
+        messages.push('Username is too short.')
+
+    if(username.length > 20)
+        messages.push('Username is too long.')
+
+    if(!validate(email))
+        messages.push('Invalid email.')
+
+    if(await getUserByUsername(username) !== null)
+        messages.push('This username is already in use.')
+
+    if(await getUserByEmail(email) !== null)
+        messages.push('This email is already in use.')
+
+    if(password !== repeatPassword)
+        messages.push('Passwords do not match.')
+
+    if(messages.length > 0) {
+        for(const msg of messages) {
+            await req.flash('messages', msg)
+        }
+        await req.flash('email', email)
+        await req.flash('username', username)
+        return res.redirect('./register')
+    }
 
     await createUser({ username, email, password })
 

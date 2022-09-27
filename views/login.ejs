@@ -5,16 +5,18 @@
         <div class="card-header">
             <h2>Login</h2>
         </div>
-        <% if (error == 1) { %>
-          <div class="alert alert-danger mx-5 mt-4 mb-0" role="alert">
-            An error occured while logging in. Please make sure your credentials are correct.
-          </div>
+        <% if (messages.length !== 0) { %>
+            <% for(const msg of messages) { %>
+                <div class="alert alert-danger mx-5 mt-4 mb-0" role="alert">
+                    <b>Error! </b><%= msg %>
+                </div>
+            <% } %>
         <% } %>
         <div class="card-body p-5">
             <div class="form-wrapper">
                 <form method="POST">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Username or email address</label>
+                      <label for="username" class="form-label">Username or email address</label>
                       <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" required>
                       <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                     </div>
