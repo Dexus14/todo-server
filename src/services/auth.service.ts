@@ -17,13 +17,11 @@ passport.use(
         async (username, password, done) => {
             let user = null
             try {
-                // FIXME: User can possibly set username that is an email - add username validation.
                 if(validate(username))
                     user = await getUserByEmail(username)
                 else
                     user = await getUserByUsername(username)
 
-                // TODO: Add support for messages or remove them.
                 if(user === null)
                     return done(null, false, { message: 'User not found.' })
 

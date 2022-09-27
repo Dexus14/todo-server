@@ -6,16 +6,12 @@
         <div class="card-header">
           <h2>Your TODOs</h2>
         </div>
-        <% if (error !== null) { %>
-          <div class="alert alert-danger mx-5 mt-4 mb-0" role="alert">
-            <% if (error === 'delete') { %>
-              An error occured while trying to delete todo.
-            <% } else if (error ==='create') { %>
-              And error occured while creating todo.
-            <% } else { %>
-              An unknown error has occured.
-            <% } %>
-          </div>
+        <% if (messages.length !== 0) { %>
+          <% for(const msg of messages) { %>
+            <div class="alert alert-info mx-5 mt-4 mb-0" role="alert">
+              <%= msg %>
+            </div>
+          <% } %>
         <% } %>
 
         <div class="card-body mx-5 mb-4 mt-4">

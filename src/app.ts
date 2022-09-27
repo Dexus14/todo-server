@@ -11,13 +11,12 @@ const app = express()
 
 app.listen(process.env.PORT)
 
-// FIXME: uninstall bodyparses
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
 app.use(
     session({
-        secret: 'test-secret', // FIXME: Change
+        secret: process.env.SESSION_SECRET as string,
         resave: false,
         saveUninitialized: true,
         cookie: {
